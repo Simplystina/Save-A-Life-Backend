@@ -30,5 +30,11 @@ exports.createBloodRequest = asyncHandler(async(req,rest, next)=>{
     lastDonationDate: { $lte: new Date(Date.now() - 90 * 24 * 60 * 60 * 1000) }, // 3-month gap
     isCurrentlyDonating: true, // Ensure they are eligible
   })//.limit(5); // Limit to 5 suggestions
-  
+
+  const suggestedDonorIds = suggestedDonors.map((donor) => donor._id);
+
+  // Update the created request with suggested donor IDs
+  createdRequest.suggestedDonors = suggestedDonorIds;
+  await createdRequest.save();
+
 })
