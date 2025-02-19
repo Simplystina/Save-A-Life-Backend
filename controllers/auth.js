@@ -46,7 +46,9 @@ exports.register = async(req,res,next)=>{
         }
         
         const user = await UserModel.create(userData)
-        const donor = await DonorModel.create(lastDonationDate)
+        const donor = await DonorModel.create({
+          lastDonationDate: lastDonationDate
+        });
          const otp = `${verificationOtp}`
         // Send verification email to the user
         await sendVerificationEmail(user, otp);
@@ -72,8 +74,6 @@ exports.login = async(req,res,next)=>{
           
         //Get user input
         const {email, password}=data = req.body
-
-
          //Validate if user exist in our database
         const user = await UserModel.findOne({ email })
        console.log("We got here")
@@ -83,7 +83,7 @@ exports.login = async(req,res,next)=>{
            );
         } 
         
-       
+
         //validate user password
         const validate = await user.isValidPassword(password)
         const isValidPassword = await bcrypt.compare(password, user?.password);
