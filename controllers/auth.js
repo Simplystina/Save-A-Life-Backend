@@ -4,7 +4,7 @@ const nodemailer = require('nodemailer');
 const crypto = require('crypto');
 const bcrypt = require("bcryptjs");
 const DonorModel = require("../Model/donor");
-const { ErrorResponse } = require("../core");
+const { ErrorResponse, asyncHandler } = require("../core");
 
 const httpStatus = require("http-status");
 const {sendVerificationEmail} = require("../services/email.service")
@@ -69,51 +69,42 @@ exports.register = async(req,res,next)=>{
   }
 }
 
-exports.login = async(req,res,next)=>{
-    try {
-          
-        //Get user input
-        const {email, password}=data = req.body
-         //Validate if user exist in our database
-        const user = await UserModel.findOne({ email })
-       console.log("We got here")
-        if(!user){
-           return next(
-             new ErrorResponse("User doesn't exist", httpStatus.status[404])
-           );
-        } 
-        
+exports.login = asyncHandler(async(req,res,next)=>{
+  //Get user input
+  const { email, password } = (data = req.body);
+  //Validate if user exist in our database
+  const user = await UserModel.findOne({ email });
+  if (!user) {
+    return next(
+      new ErrorResponse("User doesn't exist", httpStatus.status[404])
+    );
+  }
 
-        //validate user password
-        const validate = await user.isValidPassword(password)
-        const isValidPassword = await bcrypt.compare(password, user?.password);
-        if(!validate)
-        return next(
-          new ErrorResponse("Wrong password entered", httpStatus.status[404])
-        );
+  const isValidPassword = await user.isValidPassword(password);
+  if (!isValidPassword) {
+    //  return res
+    //    .status(404)
+    //    .json({ success: false, message: "Wrong password entered" });
+    return next(
+      new ErrorResponse("Wrong password entered", 404)
+    );
+  }
 
-        //create token
-        const token = jwt.sign(
-            { userid: user._id, email},
-            process.env.JWT_TOKEN,
-            {
-                expiresIn: "5h"
-            }
-        )
-        //save user token
-        userData = user.toObject();
-        userData.token = token 
-      
-        //Delete the password from the object so as not to display the hash to the user
-        delete userData.password;
-       
-        return  res.status(200).json({success:true, message:"Logged in successfully", data:userData})
-    } catch (error) {
-       next(new ErrorResponse(error, httpStatus.status.INTERNAL_SERVER_ERROR));
-    }
+  //create token
+  const token = jwt.sign({ userid: user._id, email }, process.env.JWT_TOKEN, {
+    expiresIn: "5h",
+  });
+  //save user token
+  userData = user.toObject();
+  userData.token = token;
 
-}
+  //Delete the password from the object so as not to display the hash to the user
+  delete userData.password;
 
+  return res
+    .status(200)
+    .json({ success: true, message: "Logged in successfully", data: userData });
+})
 // API endpoint for verifying the user's email
 exports.verify = async(req, res) => {
     const { otp, email } = req.query;

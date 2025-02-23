@@ -9,12 +9,11 @@ const ErrorResponse = require('./core.errorResponse');
  * @returns
  */
 const errorHandler = (err, req, res, next) => {
-  let error = {
-    ...err
-  };
-  error.message = err.message;
+  let error = Object.assign(new ErrorResponse(), err);
+   error.message = err.message || "Server Error";
+
   if (process.env.MODE !== 'production') {
-    console.log(err.name);
+    console.log(err.name, "Error name");
     // console.log(err);
   }
 
@@ -45,11 +44,12 @@ const errorHandler = (err, req, res, next) => {
   //   const message = Object.values(err.errors).map((val) => val.message);
   //   error = new ErrorResponse(message, 400);
   // }
-
+ 
+  console.log(error, "error and error", err)
   return res.status(error.statusCode || 500).json({
     success: false,
-    status: 'error',
-    error: error.message || 'Server Error'
+    status: "error",
+    error: error.message || "Server Error",
   });
 };
 
