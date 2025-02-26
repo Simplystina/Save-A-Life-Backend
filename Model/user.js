@@ -12,7 +12,6 @@ const UserModel = new mongoose.Schema(
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
     bloodType: { type: String, required: true },
-    stateOfResidence: { type: String, required: true },
     currentAddress: { type: String },
     dateOfBirth: { type: Date },
     verified: { type: Boolean, default: false },

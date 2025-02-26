@@ -1,24 +1,32 @@
-const mongoose = require("mongoose")
+const mongoose = require("mongoose");
+const { Schema } = mongoose;
 
-const Schema = mongoose.Schema
-const Types = mongoose.Types
-const ObjectId = Schema.ObjectId
-
-const Request = new mongoose.Schema(
+const RequestSchema = new Schema(
   {
-    id: ObjectId,
-    recipientId: { type: Types.ObjectId, required: true, ref: "users" },
-    points: { type: String, required: true },
-    bloodType: { type: String },
-    location: { type: String },
-    status :  { type: String },
-    requestDate : { type: Date },
-    recipientName : {type :String},
-    hospitalName : {type :String},
-    doctorsName: {type: String},
-    age : {type : Number},
-    reason : {type : String},
-    suggestedDonors : [{type: ObjectId, ref: 'donor'}]
+    recipientId: { type: Schema.Types.ObjectId, required: true, ref: "User" },
+    bloodType: { type: String, required: true },
+    isRequestForSelf: { type: Boolean, default: false },
+    status: {
+      type: String,
+      default: "pending",
+      enum: [
+        "pending",
+        "suggested",
+        "matched",
+        "accepted",
+        "cancelled",
+        "completed",
+      ],
+    },
+    recipientName: { type: String, required: true },
+    hospitalName: { type: String, required: true },
+    hospitalLocation: { type: String, required: true },
+    hospitalStateOfResidence: { type: String, required: true },
+    doctorsName: { type: String, required: true },
+    age: { type: Number, required: true },
+    reason: { type: String, required: true },
+    acceptedDonorId: { type: Schema.Types.ObjectId, ref: "Donor" },
+    suggestedDonors: [{ type: Schema.Types.ObjectId, ref: "Donor" }],
   },
   {
     timestamps: true,
@@ -26,7 +34,6 @@ const Request = new mongoose.Schema(
   }
 );
 
-
-const RequestModel = mongoose.model("request", Request);
+const RequestModel = mongoose.model("Request", RequestSchema);
 
 module.exports = RequestModel;

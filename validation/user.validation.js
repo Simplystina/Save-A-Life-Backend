@@ -7,7 +7,7 @@ exports.signup = {
     email: Joi.string().email().required(),
     password: Joi.string().min(6).required(),
     bloodType: Joi.string().uppercase().required(),
-    stateOfResidence: Joi.string().required(),
+    stateOfResidence: Joi.string().required().lowercase(),
     currentAddress: Joi.string().required(),
     dateOfBirth: Joi.string().required(),
     lastDonationDate: Joi.string(),

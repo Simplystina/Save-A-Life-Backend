@@ -9,6 +9,7 @@ require("dotenv").config()
 //import Routers
 const authRouter = require("./Routers/auth")
 const userRouter = require("./Routers/user")
+const requestRouter = require("./Routers/request");
 const rateLimiterUsingThirdParty  = require('./Middleware/rateLimit')
 
 
@@ -35,7 +36,7 @@ app.use(function(req, res, next) {
 //app.use(rateLimiterUsingThirdParty); //rate limiting
 app.use('/auth', authRouter)
 app.use('/user', auth, userRouter)
-
+app.use('/request', auth, requestRouter)
 app.use(errorHandler);
 
 // catch 404 and forward to error handler
