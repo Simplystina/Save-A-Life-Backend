@@ -11,7 +11,7 @@ const verifyToken = (req, res, next)=>{
         return next(
           new ErrorResponse(
             "A token is required for authentication",
-            httpStatus.status.FORBIDDEN
+            403
           )
         );
       
@@ -25,7 +25,7 @@ const verifyToken = (req, res, next)=>{
     } catch (error) {
         console.log(error)
         return next(
-          new ErrorResponse("Invalid Token", httpStatus.status[401])
+          new ErrorResponse("Invalid Token", 401)
         );
         
     }
