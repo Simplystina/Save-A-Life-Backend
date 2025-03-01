@@ -9,7 +9,7 @@ const requestRouter = express.Router()
 
 requestRouter.post("/create", validate(requestValidator.makeBloodRequest), requestController.createBloodRequest);
 requestRouter.get(
-  "/find",
+  "/recipient/all",
   requestController.getMyBloodRequest
 );
 
