@@ -36,6 +36,9 @@ exports.createBloodRequest = asyncHandler(async(req,res, next)=>{
 
   // Update the created request with suggested donor IDs
   createdRequest.suggestedDonors = suggestedDonorIds;
+  if(suggestedDonorIds.length > 0){
+    createdRequest.status = "suggested"
+  }
   await createdRequest.save();
   return res.status(201).json({
     message: "Request Created Successfully",

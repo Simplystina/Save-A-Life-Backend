@@ -21,6 +21,7 @@ const verifyToken = (req, res, next)=>{
         const token = bearer[1]
         
         const decoded = jwt.verify(token, process.env.JWT_TOKEN)
+        console.log(decoded,"decoded")
         req.user = decoded
     } catch (error) {
         console.log(error)
