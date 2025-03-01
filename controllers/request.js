@@ -46,3 +46,13 @@ exports.createBloodRequest = asyncHandler(async(req,res, next)=>{
     success: true,
   });
 })
+
+exports.getMyBloodRequest = asyncHandler(async(req,res, next)=>{
+  console.log(req.user)
+  const requests = await RequestModel.find({recipientId : req.user.userid})
+  return res.status(201).json({
+    message: "Request retrieved Successfully",
+    data: requests,
+    success: true,
+  });
+})

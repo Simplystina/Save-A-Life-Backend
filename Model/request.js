@@ -12,7 +12,6 @@ const RequestSchema = new Schema(
       enum: [
         "pending",
         "suggested",
-        "matched",
         "accepted",
         "cancelled",
         "completed",

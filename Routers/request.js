@@ -8,5 +8,9 @@ require("dotenv").config()
 const requestRouter = express.Router()
 
 requestRouter.post("/create", validate(requestValidator.makeBloodRequest), requestController.createBloodRequest);
+requestRouter.get(
+  "/find",
+  requestController.getMyBloodRequest
+);
 
 module.exports = requestRouter;
