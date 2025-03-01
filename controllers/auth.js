@@ -47,7 +47,9 @@ exports.register = async(req,res,next)=>{
         
         const user = await UserModel.create(userData)
         const donor = await DonorModel.create({
-          lastDonationDate: lastDonationDate
+          lastDonationDate: lastDonationDate,
+          stateOfResidence: stateOfResidence,
+          bloodType :bloodType
         });
          const otp = `${verificationOtp}`
         // Send verification email to the user
